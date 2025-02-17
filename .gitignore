@@ -20,8 +20,8 @@ debug.test
 .DS_Store
 cover.out
 coverage.tmp
-docker-compose.yml
 tsconfig.tsbuildinfo
 etc/*.pem
 
 pg_data/
+docker-compose.yml
