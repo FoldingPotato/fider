@@ -35,6 +35,16 @@ func Index() web.HandlerFunc {
 			return c.Failure(err)
 		}
 
+		// Fetch attachments for each post
+		for _, post := range searchPosts.Result {
+			getAttachments := &query.GetAttachments{Post: post}
+			if err := bus.Dispatch(c, getAttachments); err != nil {
+				return c.Failure(err)
+			}
+			// Add the attachments to the post
+			post.Attachments = getAttachments.Result
+		}
+
 		description := ""
 		if c.Tenant().WelcomeMessage != "" {
 			description = markdown.PlainText(c.Tenant().WelcomeMessage)

@@ -30,6 +30,7 @@ beforeEach(() => {
     response: null,
     votesCount: 5,
     commentsCount: 2,
+    attachments: [],
     tags: [],
   }
 })

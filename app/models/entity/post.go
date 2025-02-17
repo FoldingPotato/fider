@@ -21,6 +21,7 @@ type Post struct {
 	CommentsCount int             `json:"commentsCount"`
 	Status        enum.PostStatus `json:"status"`
 	Response      *PostResponse   `json:"response,omitempty"`
+	Attachments   []string        `json:"attachments"` // Each post can have multiple attachments
 	Tags          []string        `json:"tags"`
 }
 

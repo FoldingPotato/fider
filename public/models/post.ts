@@ -13,6 +13,7 @@ export interface Post {
   response: PostResponse | null
   votesCount: number
   commentsCount: number
+  attachments: string[]
   tags: string[]
 }
 

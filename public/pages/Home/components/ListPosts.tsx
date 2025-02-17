@@ -22,9 +22,9 @@ const ListPostItem = (props: { post: Post; user?: CurrentUser; tags: Tag[] }) =>
             <ResponseLozenge status={props.post.status} response={props.post.response} small={true} />
           </div>
         )}
-        <HStack justify="between">
+        <HStack>
           <a className="text-title hover:text-primary-base" href={`/posts/${props.post.number}/${props.post.slug}`}>
-            {props.post.title}
+            {props.post.title} <br></br><img src={props.post.attachments && props.post.attachments.length > 0 ? `/static/images/${props.post.attachments[0]}?size=200` : ''}></img>
           </a>
           {props.post.commentsCount > 0 && (
             <HStack className="text-muted">
