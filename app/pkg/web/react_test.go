@@ -48,7 +48,7 @@ func TestReactRenderer_RenderEmptyHomeHTML(t *testing.T) {
 		"props": web.Map{
 			"posts":          make([]web.Map, 0),
 			"tags":           make([]web.Map, 0),
-			"countPerStatus": web.Map{},
+			// "countPerStatus": web.Map{},
 		},
 	})
 	Expect(html).ContainsSubstring(`<div class="c-dev-banner">DEV</div>`)
@@ -76,7 +76,7 @@ func TestReactRenderer_RenderEmptyHomeHTML_Portuguese(t *testing.T) {
 		"props": web.Map{
 			"posts":          make([]web.Map, 0),
 			"tags":           make([]web.Map, 0),
-			"countPerStatus": web.Map{},
+			// "countPerStatus": web.Map{},
 		},
 	})
 	Expect(html).ContainsSubstring(`<div class="c-dev-banner">DEV</div>`)

@@ -7,7 +7,7 @@ import (
 	"github.com/getfider/fider/app/metrics"
 	"github.com/getfider/fider/app/models/cmd"
 	"github.com/getfider/fider/app/models/entity"
-	"github.com/getfider/fider/app/models/enum"
+	// "github.com/getfider/fider/app/models/enum"
 	"github.com/getfider/fider/app/models/query"
 	"github.com/getfider/fider/app/pkg/bus"
 	"github.com/getfider/fider/app/pkg/env"
@@ -32,7 +32,7 @@ func SearchPosts() web.HandlerFunc {
 		if myVotesOnly, err := c.QueryParamAsBool("myvotes"); err == nil {
 			searchPosts.MyVotesOnly = myVotesOnly
 		}
-		searchPosts.SetStatusesFromStrings(c.QueryParamAsArray("statuses"))
+		// searchPosts.SetStatusesFromStrings(c.QueryParamAsArray("statuses"))
 
 		if err := bus.Dispatch(c, searchPosts); err != nil {
 			return c.Failure(err)
@@ -161,24 +161,19 @@ func SetResponse() web.HandlerFunc {
 			return c.Failure(err)
 		}
 
-		prevStatus := getPost.Result.Status
+		// prevStatus := getPost.Result.Status
 
 		var command bus.Msg
-		if action.Status == enum.PostDuplicate {
-			command = &cmd.MarkPostAsDuplicate{Post: getPost.Result, Original: action.Original}
-		} else {
-			command = &cmd.SetPostResponse{
-				Post:   getPost.Result,
-				Text:   action.Text,
-				Status: action.Status,
-			}
+		command = &cmd.SetPostResponse{
+			Post:   getPost.Result,
+			Text:   action.Text,
+			// Status: action.Status,
 		}
-
 		if err := bus.Dispatch(c, command); err != nil {
 			return c.Failure(err)
 		}
 
-		c.Enqueue(tasks.NotifyAboutStatusChange(getPost.Result, prevStatus))
+		// c.Enqueue(tasks.NotifyAboutStatusChange(getPost.Result, prevStatus))
 
 		return c.Ok(web.Map{})
 	}
@@ -195,7 +190,7 @@ func DeletePost() web.HandlerFunc {
 		err := bus.Dispatch(c, &cmd.SetPostResponse{
 			Post:   action.Post,
 			Text:   action.Text,
-			Status: enum.PostDeleted,
+			// Status: enum.PostDeleted,
 		})
 		if err != nil {
 			return c.Failure(err)

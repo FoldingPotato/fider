@@ -1,7 +1,7 @@
 import "./DesignSystem.page.scss"
 
 import React, { useState } from "react"
-import { PostStatus, UserStatus } from "@fider/models"
+import { UserStatus } from "@fider/models"
 import {
   PageTitle,
   Button,
@@ -9,7 +9,7 @@ import {
   Toggle,
   Avatar,
   ShowTag,
-  ShowPostStatus,
+  // ShowPostStatus,
   Moment,
   Loader,
   Form,
@@ -340,14 +340,14 @@ const DesignSystemPage = () => {
 
         <h2 className="text-display2 mb-3 mt-6">7. Statuses</h2>
 
-        <VStack>
+        {/* <VStack>
           <ShowPostStatus status={PostStatus.Open} />
           <ShowPostStatus status={PostStatus.Planned} />
           <ShowPostStatus status={PostStatus.Started} />
           <ShowPostStatus status={PostStatus.Duplicate} />
           <ShowPostStatus status={PostStatus.Completed} />
           <ShowPostStatus status={PostStatus.Declined} />
-        </VStack>
+        </VStack> */}
 
         <h2 className="text-display2 mb-3 mt-6">8. Tags</h2>
 

@@ -6,7 +6,7 @@ import (
 
 	"github.com/getfider/fider/app/models/dto"
 	"github.com/getfider/fider/app/models/entity"
-	"github.com/getfider/fider/app/models/enum"
+	// "github.com/getfider/fider/app/models/enum"
 	"github.com/getfider/fider/app/models/query"
 	"github.com/getfider/fider/app/pkg/bus"
 	"github.com/getfider/fider/app/pkg/env"
@@ -233,7 +233,7 @@ func (action *AddNewComment) Validate(ctx context.Context, user *entity.User) *v
 // SetResponse represents the action to update an post response
 type SetResponse struct {
 	Number         int             `route:"number"`
-	Status         enum.PostStatus `json:"status"`
+	// Status         enum.PostStatus `json:"status"`
 	Text           string          `json:"text"`
 	OriginalNumber int             `json:"originalNumber"`
 
@@ -249,29 +249,29 @@ func (action *SetResponse) IsAuthorized(ctx context.Context, user *entity.User) 
 func (action *SetResponse) Validate(ctx context.Context, user *entity.User) *validate.Result {
 	result := validate.Success()
 
-	if action.Status < enum.PostOpen || action.Status > enum.PostDuplicate {
-		result.AddFieldFailure("status", propertyIsInvalid(ctx, "status"))
-	}
+	// if action.Status < enum.PostOpen || action.Status > enum.PostDuplicate {
+	// 	result.AddFieldFailure("status", propertyIsInvalid(ctx, "status"))
+	// }
 
-	if action.Status == enum.PostDuplicate {
-		if action.OriginalNumber == action.Number {
-			result.AddFieldFailure("originalNumber", i18n.T(ctx, "validation.custom.selfduplicate"))
-		}
+	// if action.Status == enum.PostDuplicate {
+	// 	if action.OriginalNumber == action.Number {
+	// 		result.AddFieldFailure("originalNumber", i18n.T(ctx, "validation.custom.selfduplicate"))
+	// 	}
 
-		getOriginaPost := &query.GetPostByNumber{Number: action.OriginalNumber}
-		err := bus.Dispatch(ctx, getOriginaPost)
-		if err != nil {
-			if errors.Cause(err) == app.ErrNotFound {
-				result.AddFieldFailure("originalNumber", i18n.T(ctx, "validation.custom.originalpostnotfound"))
-			} else {
-				return validate.Error(err)
-			}
-		}
+	// 	getOriginaPost := &query.GetPostByNumber{Number: action.OriginalNumber}
+	// 	err := bus.Dispatch(ctx, getOriginaPost)
+	// 	if err != nil {
+	// 		if errors.Cause(err) == app.ErrNotFound {
+	// 			result.AddFieldFailure("originalNumber", i18n.T(ctx, "validation.custom.originalpostnotfound"))
+	// 		} else {
+	// 			return validate.Error(err)
+	// 		}
+	// 	}
 
-		if getOriginaPost.Result != nil {
-			action.Original = getOriginaPost.Result
-		}
-	}
+	// 	if getOriginaPost.Result != nil {
+	// 		action.Original = getOriginaPost.Result
+	// 	}
+	// }
 
 	return result
 }

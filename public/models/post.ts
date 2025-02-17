@@ -7,7 +7,7 @@ export interface Post {
   title: string
   description: string
   createdAt: string
-  status: string
+  // status: string
   user: User
   hasVoted: boolean
   response: PostResponse | null
@@ -17,28 +17,28 @@ export interface Post {
   tags: string[]
 }
 
-export class PostStatus {
-  constructor(public title: string, public value: string, public show: boolean, public closed: boolean, public filterable: boolean) {}
+// export class PostStatus {
+//   constructor(public title: string, public value: string, public show: boolean, public closed: boolean, public filterable: boolean) {}
 
-  public static Open = new PostStatus("Open", "open", false, false, true)
-  public static Planned = new PostStatus("Planned", "planned", true, false, true)
-  public static Started = new PostStatus("Started", "started", true, false, true)
-  public static Completed = new PostStatus("Completed", "completed", true, true, true)
-  public static Declined = new PostStatus("Declined", "declined", true, true, true)
-  public static Duplicate = new PostStatus("Duplicate", "duplicate", true, true, true)
-  public static Deleted = new PostStatus("Deleted", "deleted", false, true, true)
+//   public static Open = new PostStatus("Open", "open", false, false, true)
+//   public static Planned = new PostStatus("Planned", "planned", true, false, true)
+//   public static Started = new PostStatus("Started", "started", true, false, true)
+//   public static Completed = new PostStatus("Completed", "completed", true, true, true)
+//   public static Declined = new PostStatus("Declined", "declined", true, true, true)
+//   public static Duplicate = new PostStatus("Duplicate", "duplicate", true, true, true)
+//   public static Deleted = new PostStatus("Deleted", "deleted", false, true, true)
 
-  public static Get(value: string): PostStatus {
-    for (const status of PostStatus.All) {
-      if (status.value === value) {
-        return status
-      }
-    }
-    throw new Error(`PostStatus not found for value ${value}.`)
-  }
+//   public static Get(value: string): PostStatus {
+//     for (const status of PostStatus.All) {
+//       if (status.value === value) {
+//         return status
+//       }
+//     }
+//     throw new Error(`PostStatus not found for value ${value}.`)
+//   }
 
-  public static All = [PostStatus.Open, PostStatus.Planned, PostStatus.Started, PostStatus.Completed, PostStatus.Duplicate, PostStatus.Declined]
-}
+//   public static All = [PostStatus.Open, PostStatus.Planned, PostStatus.Started, PostStatus.Completed, PostStatus.Duplicate, PostStatus.Declined]
+// }
 
 export interface PostResponse {
   user: User
@@ -48,7 +48,7 @@ export interface PostResponse {
     number: number
     title: string
     slug: string
-    status: string
+    // status: string
   }
 }
 

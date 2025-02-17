@@ -1,5 +1,5 @@
 import React from "react"
-import { Post, UserRole, PostStatus, UserStatus } from "@fider/models"
+import { Post, UserRole, UserStatus } from "@fider/models"
 import { VoteCounter } from "@fider/components"
 import { screen, fireEvent, render } from "@testing-library/react"
 import { fiderMock, httpMock, setupModalRoot } from "@fider/services/testing"
@@ -18,7 +18,7 @@ beforeEach(() => {
     title: "Add TypeScript",
     description: "",
     createdAt: "",
-    status: PostStatus.Started.value,
+    // status: PostStatus.Started.value,
     user: {
       id: 5,
       name: "John",
@@ -67,7 +67,7 @@ describe("<VoteCounter />", () => {
   })
 
   test("when post is closed", () => {
-    post.status = PostStatus.Completed.value
+    // post.status = PostStatus.Completed.value
     const { container } = render(
       <FiderContext.Provider value={fiderMock.authenticated()}>
         <VoteCounter post={post} />

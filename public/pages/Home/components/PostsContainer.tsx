@@ -17,7 +17,7 @@ interface PostsContainerProps {
   user?: CurrentUser
   posts: Post[]
   tags: Tag[]
-  countPerStatus: { [key: string]: number }
+  // countPerStatus: { [key: string]: number }
 }
 
 interface PostsContainerState {
@@ -129,7 +129,7 @@ export class PostsContainer extends React.Component<PostsContainerProps, PostsCo
                 tags={this.props.tags}
                 activeFilter={this.state.filterState}
                 filtersChanged={this.handleFilterChanged}
-                countPerStatus={this.props.countPerStatus}
+                // countPerStatus={this.props.countPerStatus}
               />
               <PostsSort onChange={this.handleSortChanged} value={this.state.view} />
             </div>

@@ -101,7 +101,7 @@ func TestRenderer_Home(t *testing.T) {
 		Data: web.Map{
 			"posts":          make([]web.Map, 0),
 			"tags":           make([]web.Map, 0),
-			"countPerStatus": web.Map{},
+			// "countPerStatus": web.Map{},
 		},
 	}, ctx)
 
@@ -130,7 +130,7 @@ func TestRenderer_Home_SSR(t *testing.T) {
 		Data: web.Map{
 			"posts":          make([]web.Map, 0),
 			"tags":           make([]web.Map, 0),
-			"countPerStatus": web.Map{},
+			// "countPerStatus": web.Map{},
 		},
 	}, ctx)
 

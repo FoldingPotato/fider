@@ -1,6 +1,6 @@
 export * from "./ErrorBoundary"
 export * from "./ShowPostResponse"
-export * from "./ShowPostStatus"
+// export * from "./ShowPostStatus"
 export * from "./ShowTag"
 export * from "./Header"
 export * from "./SignInModal"

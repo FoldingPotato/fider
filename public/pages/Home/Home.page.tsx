@@ -2,7 +2,7 @@ import "./Home.page.scss"
 import NoDataIllustration from "@fider/assets/images/undraw-no-data.svg"
 
 import React, { useState } from "react"
-import { Post, Tag, PostStatus } from "@fider/models"
+import { Post, Tag } from "@fider/models"
 import { Markdown, Hint, Icon, Header } from "@fider/components"
 import { SimilarPosts } from "./components/SimilarPosts"
 import { PostInput } from "./components/PostInput"
@@ -16,7 +16,7 @@ import { Trans } from "@lingui/react/macro"
 export interface HomePageProps {
   posts: Post[]
   tags: Tag[]
-  countPerStatus: { [key: string]: number }
+  // countPerStatus: { [key: string]: number }
 }
 
 export interface HomePageState {
@@ -59,14 +59,14 @@ What can we do better? This is the place for you to vote, discuss and share idea
   })
 
   const isLonely = () => {
-    const len = Object.keys(props.countPerStatus).length
-    if (len === 0) {
-      return true
-    }
+    // const len = Object.keys(props.countPerStatus).length
+    // if (len === 0) {
+    //   return true
+    // }
 
-    if (len === 1 && PostStatus.Deleted.value in props.countPerStatus) {
-      return true
-    }
+    // if (len === 1 && PostStatus.Deleted.value in props.countPerStatus) {
+    //   return true
+    // }
 
     return false
   }
@@ -87,7 +87,7 @@ What can we do better? This is the place for you to vote, discuss and share idea
           ) : title ? (
             <SimilarPosts title={title} tags={props.tags} />
           ) : (
-            <PostsContainer posts={props.posts} tags={props.tags} countPerStatus={props.countPerStatus} />
+            <PostsContainer posts={props.posts} tags={props.tags} />
           )}
         </div>
       </div>

@@ -1,5 +1,5 @@
 import React from "react"
-import { PostStatus, Tag } from "@fider/models"
+import { Tag } from "@fider/models"
 import { Checkbox, Dropdown, Icon } from "@fider/components"
 import { HStack } from "@fider/components/layout"
 import HeroIconFilter from "@fider/assets/images/heroicons-filter.svg"
@@ -20,7 +20,7 @@ interface OptionItem {
 
 interface PostFilterProps {
   activeFilter: FilterState
-  countPerStatus: { [key: string]: number }
+  // countPerStatus: { [key: string]: number }
   filtersChanged: (filter: FilterState) => void
   tags: Tag[]
 }
@@ -77,15 +77,15 @@ export const PostFilter = (props: PostFilterProps) => {
     options.push({ value: true, label: i18n._("home.postfilter.option.myvotes", { message: "My Votes" }), type: "myVotes" })
   }
 
-  PostStatus.All.filter((s) => s.filterable && props.countPerStatus[s.value]).forEach((s) => {
-    const id = `enum.poststatus.${s.value.toString()}`
-    options.push({
-      label: i18n._(id, { message: s.title }),
-      value: s.value,
-      count: props.countPerStatus[s.value],
-      type: "status",
-    })
-  })
+  // PostStatus.All.filter((s) => s.filterable && props.countPerStatus[s.value]).forEach((s) => {
+  //   const id = `enum.poststatus.${s.value.toString()}`
+  //   options.push({
+  //     label: i18n._(id, { message: s.title }),
+  //     value: s.value,
+  //     count: props.countPerStatus[s.value],
+  //     type: "status",
+  //   })
+  // })
 
   props.tags.forEach((t) => {
     options.push({

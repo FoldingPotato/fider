@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"github.com/getfider/fider/app/models/entity"
-	"github.com/getfider/fider/app/models/enum"
+	// "github.com/getfider/fider/app/models/enum"
 )
 
 type AddNewPost struct {
@@ -23,5 +23,5 @@ type UpdatePost struct {
 type SetPostResponse struct {
 	Post   *entity.Post
 	Text   string
-	Status enum.PostStatus
+	// Status enum.PostStatus
 }

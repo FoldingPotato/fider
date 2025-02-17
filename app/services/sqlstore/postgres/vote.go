@@ -39,9 +39,9 @@ func (v *dbVote) toModel(ctx context.Context) *entity.Vote {
 
 func addVote(ctx context.Context, c *cmd.AddVote) error {
 	return using(ctx, func(trx *dbx.Trx, tenant *entity.Tenant, user *entity.User) error {
-		if !c.Post.CanBeVoted() {
-			return nil
-		}
+		// if !c.Post.CanBeVoted() {
+		// 	return nil
+		// }
 
 		_, err := trx.Execute(
 			`INSERT INTO post_votes (tenant_id, user_id, post_id, created_at) VALUES ($1, $2, $3, $4) ON CONFLICT DO NOTHING`,
@@ -58,9 +58,9 @@ func addVote(ctx context.Context, c *cmd.AddVote) error {
 
 func removeVote(ctx context.Context, c *cmd.RemoveVote) error {
 	return using(ctx, func(trx *dbx.Trx, tenant *entity.Tenant, user *entity.User) error {
-		if !c.Post.CanBeVoted() {
-			return nil
-		}
+		// if !c.Post.CanBeVoted() {
+		// 	return nil
+		// }
 
 		_, err := trx.Execute(`DELETE FROM post_votes WHERE user_id = $1 AND post_id = $2 AND tenant_id = $3`, c.User.ID, c.Post.ID, tenant.ID)
 		if err != nil {

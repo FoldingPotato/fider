@@ -27,11 +27,11 @@ func Index() web.HandlerFunc {
 			searchPosts.MyVotesOnly = myVotesOnly
 		}
 
-		searchPosts.SetStatusesFromStrings(c.QueryParamAsArray("statuses"))
+		// searchPosts.SetStatusesFromStrings(c.QueryParamAsArray("statuses"))
 		getAllTags := &query.GetAllTags{}
-		countPerStatus := &query.CountPostPerStatus{}
+		// countPerStatus := &query.CountPostPerStatus{}
 
-		if err := bus.Dispatch(c, searchPosts, getAllTags, countPerStatus); err != nil {
+		if err := bus.Dispatch(c, searchPosts, getAllTags); err != nil {
 			return c.Failure(err)
 		}
 
@@ -58,7 +58,7 @@ func Index() web.HandlerFunc {
 			Data: web.Map{
 				"posts":          searchPosts.Result,
 				"tags":           getAllTags.Result,
-				"countPerStatus": countPerStatus.Result,
+				// "countPerStatus": countPerStatus.Result,
 			},
 		})
 	}

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/getfider/fider/app/models/enum"
+	// "github.com/getfider/fider/app/models/enum"
 )
 
 //Post represents an post on a tenant board
@@ -19,16 +19,16 @@ type Post struct {
 	HasVoted      bool            `json:"hasVoted"`
 	VotesCount    int             `json:"votesCount"`
 	CommentsCount int             `json:"commentsCount"`
-	Status        enum.PostStatus `json:"status"`
+	// Status        enum.PostStatus `json:"status"`
 	Response      *PostResponse   `json:"response,omitempty"`
 	Attachments   []string        `json:"attachments"` // Each post can have multiple attachments
 	Tags          []string        `json:"tags"`
 }
 
 // CanBeVoted returns true if this post can have its vote changed
-func (i *Post) CanBeVoted() bool {
-	return i.Status != enum.PostCompleted && i.Status != enum.PostDeclined && i.Status != enum.PostDuplicate
-}
+// func (i *Post) CanBeVoted() bool {
+// 	return i.Status != enum.PostCompleted && i.Status != enum.PostDeclined && i.Status != enum.PostDuplicate
+// }
 
 func (i *Post) Url(baseURL string) string {
 	return fmt.Sprintf("%s/posts/%d/%s", baseURL, i.Number, i.Slug)
@@ -47,7 +47,7 @@ type OriginalPost struct {
 	Number int             `json:"number"`
 	Title  string          `json:"title"`
 	Slug   string          `json:"slug"`
-	Status enum.PostStatus `json:"status"`
+	// Status enum.PostStatus `json:"status"`
 }
 
 func (i *OriginalPost) Url(baseURL string) string {

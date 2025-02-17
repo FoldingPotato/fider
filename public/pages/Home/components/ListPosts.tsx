@@ -1,6 +1,6 @@
 import React from "react"
 import { Post, Tag, CurrentUser } from "@fider/models"
-import { ShowTag, VoteCounter, Markdown, Icon, ResponseLozenge } from "@fider/components"
+import { ShowTag, VoteCounter, Markdown, Icon } from "@fider/components"
 import IconChatAlt2 from "@fider/assets/images/heroicons-chat-alt-2.svg"
 import { HStack, VStack } from "@fider/components/layout"
 
@@ -17,11 +17,6 @@ const ListPostItem = (props: { post: Post; user?: CurrentUser; tags: Tag[] }) =>
         <VoteCounter post={props.post} />
       </div>
       <VStack className="w-full" spacing={2}>
-        {props.post.status !== "open" && (
-          <div className="mb-2 align-self-start">
-            <ResponseLozenge status={props.post.status} response={props.post.response} small={true} />
-          </div>
-        )}
         <HStack>
           <a className="text-title hover:text-primary-base" href={`/posts/${props.post.number}/${props.post.slug}`}>
             {props.post.title} <br></br><img src={props.post.attachments && props.post.attachments.length > 0 ? `/static/images/${props.post.attachments[0]}?size=200` : ''}></img>

@@ -2,7 +2,7 @@ import "./ShowPost.page.scss"
 
 import React from "react"
 
-import { Comment, Post, Tag, Vote, ImageUpload, CurrentUser, PostStatus } from "@fider/models"
+import { Comment, Post, Tag, Vote, ImageUpload, CurrentUser } from "@fider/models"
 import { actions, clearUrlHash, Failure, Fider, notify, timeAgo } from "@fider/services"
 import IconDotsHorizontal from "@fider/assets/images/heroicons-dots-horizontal.svg"
 
@@ -99,8 +99,8 @@ export default class ShowPostPage extends React.Component<ShowPostPageProps, Sho
   }
 
   private canDeletePost = () => {
-    const status = PostStatus.Get(this.props.post.status)
-    if (!Fider.session.isAuthenticated || !Fider.session.user.isAdministrator || status.closed) {
+    // const status = PostStatus.Get(this.props.post.status)
+    if (!Fider.session.isAuthenticated || !Fider.session.user.isAdministrator) {
       return false
     }
     return true
@@ -287,7 +287,7 @@ export default class ShowPostPage extends React.Component<ShowPostPageProps, Sho
                     <div className="border-4 border-blue-500" />
                   </VStack>
 
-                  <ResponseDetails status={this.props.post.status} response={this.props.post.response} />
+                  <ResponseDetails response={this.props.post.response} />
                 </VStack>
               </div>
 

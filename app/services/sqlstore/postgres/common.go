@@ -26,20 +26,20 @@ func SanitizeString(input string) string {
 	return strings.ToValidUTF8(input, "")
 }
 
-func getViewData(query query.SearchPosts) (string, []enum.PostStatus, string) {
+func getViewData(query query.SearchPosts) (string, string) {
 	var (
 		condition string
 		sort      string
 	)
-	statusFilters := query.Statuses
-	if len(statusFilters) == 0 {
-		// Use a sensible default list of status filters
-		statusFilters = []enum.PostStatus{
-			enum.PostOpen,
-			enum.PostStarted,
-			enum.PostPlanned,
-		}
-	}
+	// statusFilters := query.Statuses
+	// if len(statusFilters) == 0 {
+	// 	// Use a sensible default list of status filters
+	// 	statusFilters = []enum.PostStatus{
+	// 		enum.PostOpen,
+	// 		enum.PostStarted,
+	// 		enum.PostPlanned,
+	// 	}
+	// }
 
 	if query.MyVotesOnly {
 		condition = "AND has_voted = true"
@@ -56,31 +56,31 @@ func getViewData(query query.SearchPosts) (string, []enum.PostStatus, string) {
 		// Depracated: You can instead filter on my votes only for more flexibility than using this view.
 		condition = "AND has_voted = true"
 		sort = "id"
-	case "planned":
-		// Depracated: Use status filters instead
-		sort = "response_date"
-		statusFilters = []enum.PostStatus{enum.PostPlanned}
-	case "started":
-		// Depracated: Use status filters instead
-		sort = "response_date"
-		statusFilters = []enum.PostStatus{enum.PostStarted}
-	case "completed":
-		// Depracated: Use status filters instead
-		sort = "response_date"
-		statusFilters = []enum.PostStatus{enum.PostCompleted}
-	case "declined":
-		// Depracated: Use status filters instead
-		sort = "response_date"
-		statusFilters = []enum.PostStatus{enum.PostDeclined}
+	// case "planned":
+	// 	// Depracated: Use status filters instead
+	// 	sort = "response_date"
+	// 	statusFilters = []enum.PostStatus{enum.PostPlanned}
+	// case "started":
+	// 	// Depracated: Use status filters instead
+	// 	sort = "response_date"
+	// 	statusFilters = []enum.PostStatus{enum.PostStarted}
+	// case "completed":
+	// 	// Depracated: Use status filters instead
+	// 	sort = "response_date"
+	// 	statusFilters = []enum.PostStatus{enum.PostCompleted}
+	// case "declined":
+	// 	// Depracated: Use status filters instead
+	// 	sort = "response_date"
+	// 	statusFilters = []enum.PostStatus{enum.PostDeclined}
 	case "all":
 		sort = "id"
-		statusFilters = []enum.PostStatus{
-			enum.PostOpen,
-			enum.PostStarted,
-			enum.PostPlanned,
-			enum.PostCompleted,
-			enum.PostDeclined,
-		}
+		// statusFilters = []enum.PostStatus{
+		// 	enum.PostOpen,
+		// 	enum.PostStarted,
+		// 	enum.PostPlanned,
+		// 	enum.PostCompleted,
+		// 	enum.PostDeclined,
+		// }
 	case "trending":
 		fallthrough
 	default:
@@ -90,7 +90,7 @@ func getViewData(query query.SearchPosts) (string, []enum.PostStatus, string) {
 	if len(query.Tags) > 0 {
 		condition += " AND tags && $3"
 	}
-	return condition, statusFilters, sort
+	return condition, sort
 }
 
 func buildAvatarURL(ctx context.Context, avatarType enum.AvatarType, id int, name, avatarBlobKey string) string {

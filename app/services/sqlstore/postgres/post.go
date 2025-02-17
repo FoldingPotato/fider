@@ -8,12 +8,12 @@ import (
 	"time"
 
 	"github.com/getfider/fider/app/models/entity"
-	"github.com/getfider/fider/app/models/enum"
+	// "github.com/getfider/fider/app/models/enum"
 	"github.com/getfider/fider/app/models/query"
 	"github.com/gosimple/slug"
 	"github.com/lib/pq"
 
-	"github.com/getfider/fider/app/pkg/bus"
+	// "github.com/getfider/fider/app/pkg/bus"
 
 	"github.com/getfider/fider/app/models/cmd"
 	"github.com/getfider/fider/app/pkg/dbx"
@@ -55,7 +55,7 @@ func (i *dbPost) toModel(ctx context.Context) *entity.Post {
 		HasVoted:      i.HasVoted,
 		VotesCount:    i.VotesCount,
 		CommentsCount: i.CommentsCount,
-		Status:        enum.PostStatus(i.Status),
+		// Status:        enum.PostStatus(i.Status),
 		User:          i.User.toModel(ctx),
 		Tags:          i.Tags,
 	}
@@ -66,14 +66,14 @@ func (i *dbPost) toModel(ctx context.Context) *entity.Post {
 			RespondedAt: i.RespondedAt.Time,
 			User:        i.ResponseUser.toModel(ctx),
 		}
-		if post.Status == enum.PostDuplicate && i.OriginalNumber.Valid {
-			post.Response.Original = &entity.OriginalPost{
-				Number: int(i.OriginalNumber.Int64),
-				Slug:   i.OriginalSlug.String,
-				Title:  i.OriginalTitle.String,
-				Status: enum.PostStatus(i.OriginalStatus.Int64),
-			}
-		}
+		// if post.Status == enum.PostDuplicate && i.OriginalNumber.Valid {
+		// 	post.Response.Original = &entity.OriginalPost{
+		// 		Number: int(i.OriginalNumber.Int64),
+		// 		Slug:   i.OriginalSlug.String,
+		// 		Title:  i.OriginalTitle.String,
+		// 		Status: enum.PostStatus(i.OriginalStatus.Int64),
+		// 	}
+		// }
 	}
 	return post
 }
@@ -166,7 +166,7 @@ var (
 													ON agg_s.post_id = p.id
 													LEFT JOIN agg_tags agg_t 
 													ON agg_t.post_id = p.id
-													WHERE p.status != ` + strconv.Itoa(int(enum.PostDeleted)) + ` AND %s`
+													WHERE %s`
 )
 
 func postIsReferenced(ctx context.Context, q *query.PostIsReferenced) error {
@@ -191,25 +191,25 @@ func postIsReferenced(ctx context.Context, q *query.PostIsReferenced) error {
 
 func setPostResponse(ctx context.Context, c *cmd.SetPostResponse) error {
 	return using(ctx, func(trx *dbx.Trx, tenant *entity.Tenant, user *entity.User) error {
-		if c.Status == enum.PostDuplicate {
-			return errors.New("Use MarkAsDuplicate to change an post status to Duplicate")
-		}
+		// if c.Status == enum.PostDuplicate {
+		// 	return errors.New("Use MarkAsDuplicate to change an post status to Duplicate")
+		// }
 
 		respondedAt := time.Now()
-		if c.Post.Status == c.Status && c.Post.Response != nil {
+		if c.Post.Response != nil {
 			respondedAt = c.Post.Response.RespondedAt
 		}
 
 		_, err := trx.Execute(`
 		UPDATE posts 
-		SET response = $3, original_id = NULL, response_date = $4, response_user_id = $5, status = $6 
+		SET response = $3, original_id = NULL, response_date = $4, response_user_id = $5
 		WHERE id = $1 and tenant_id = $2
-		`, c.Post.ID, tenant.ID, c.Text, respondedAt, user.ID, c.Status)
+		`, c.Post.ID, tenant.ID, c.Text, respondedAt, user.ID)
 		if err != nil {
 			return errors.Wrap(err, "failed to update post's response")
 		}
 
-		c.Post.Status = c.Status
+		// c.Post.Status = c.Status
 		c.Post.Response = &entity.PostResponse{
 			Text:        c.Text,
 			RespondedAt: respondedAt,
@@ -219,71 +219,71 @@ func setPostResponse(ctx context.Context, c *cmd.SetPostResponse) error {
 	})
 }
 
-func markPostAsDuplicate(ctx context.Context, c *cmd.MarkPostAsDuplicate) error {
-	return using(ctx, func(trx *dbx.Trx, tenant *entity.Tenant, user *entity.User) error {
-		respondedAt := time.Now()
-		if c.Post.Status == enum.PostDuplicate && c.Post.Response != nil {
-			respondedAt = c.Post.Response.RespondedAt
-		}
+// func markPostAsDuplicate(ctx context.Context, c *cmd.MarkPostAsDuplicate) error {
+// 	return using(ctx, func(trx *dbx.Trx, tenant *entity.Tenant, user *entity.User) error {
+// 		respondedAt := time.Now()
+// 		// if c.Post.Status == enum.PostDuplicate && c.Post.Response != nil {
+// 		// 	respondedAt = c.Post.Response.RespondedAt
+// 		// }
 
-		var users []*dbUser
-		err := trx.Select(&users, "SELECT user_id AS id FROM post_votes WHERE post_id = $1 AND tenant_id = $2", c.Post.ID, tenant.ID)
-		if err != nil {
-			return errors.Wrap(err, "failed to get votes of post with id '%d'", c.Post.ID)
-		}
+// 		var users []*dbUser
+// 		err := trx.Select(&users, "SELECT user_id AS id FROM post_votes WHERE post_id = $1 AND tenant_id = $2", c.Post.ID, tenant.ID)
+// 		if err != nil {
+// 			return errors.Wrap(err, "failed to get votes of post with id '%d'", c.Post.ID)
+// 		}
 
-		for _, u := range users {
-			err := bus.Dispatch(ctx, &cmd.AddVote{Post: c.Original, User: u.toModel(ctx)})
-			if err != nil {
-				return err
-			}
-		}
+// 		for _, u := range users {
+// 			err := bus.Dispatch(ctx, &cmd.AddVote{Post: c.Original, User: u.toModel(ctx)})
+// 			if err != nil {
+// 				return err
+// 			}
+// 		}
 
-		_, err = trx.Execute(`
-		UPDATE posts 
-		SET response = '', original_id = $3, response_date = $4, response_user_id = $5, status = $6 
-		WHERE id = $1 and tenant_id = $2
-		`, c.Post.ID, tenant.ID, c.Original.ID, respondedAt, user.ID, enum.PostDuplicate)
-		if err != nil {
-			return errors.Wrap(err, "failed to update post's response")
-		}
+// 		_, err = trx.Execute(`
+// 		UPDATE posts 
+// 		SET response = '', original_id = $3, response_date = $4, response_user_id = $5, status = $6 
+// 		WHERE id = $1 and tenant_id = $2
+// 		`, c.Post.ID, tenant.ID, c.Original.ID, respondedAt, user.ID, enum.PostDuplicate)
+// 		if err != nil {
+// 			return errors.Wrap(err, "failed to update post's response")
+// 		}
 
-		c.Post.Status = enum.PostDuplicate
-		c.Post.Response = &entity.PostResponse{
-			RespondedAt: respondedAt,
-			User:        user,
-			Original: &entity.OriginalPost{
-				Number: c.Original.Number,
-				Title:  c.Original.Title,
-				Slug:   c.Original.Slug,
-				Status: c.Original.Status,
-			},
-		}
-		return nil
-	})
-}
+// 		c.Post.Status = enum.PostDuplicate
+// 		c.Post.Response = &entity.PostResponse{
+// 			RespondedAt: respondedAt,
+// 			User:        user,
+// 			Original: &entity.OriginalPost{
+// 				Number: c.Original.Number,
+// 				Title:  c.Original.Title,
+// 				Slug:   c.Original.Slug,
+// 				Status: c.Original.Status,
+// 			},
+// 		}
+// 		return nil
+// 	})
+// }
 
-func countPostPerStatus(ctx context.Context, q *query.CountPostPerStatus) error {
-	return using(ctx, func(trx *dbx.Trx, tenant *entity.Tenant, user *entity.User) error {
+// func countPostPerStatus(ctx context.Context, q *query.CountPostPerStatus) error {
+// 	return using(ctx, func(trx *dbx.Trx, tenant *entity.Tenant, user *entity.User) error {
 
-		type dbStatusCount struct {
-			Status enum.PostStatus `db:"status"`
-			Count  int             `db:"count"`
-		}
+// 		type dbStatusCount struct {
+// 			Status enum.PostStatus `db:"status"`
+// 			Count  int             `db:"count"`
+// 		}
 
-		q.Result = make(map[enum.PostStatus]int)
-		stats := []*dbStatusCount{}
-		err := trx.Select(&stats, "SELECT status, COUNT(*) AS count FROM posts WHERE tenant_id = $1 GROUP BY status", tenant.ID)
-		if err != nil {
-			return errors.Wrap(err, "failed to count posts per status")
-		}
+// 		q.Result = make(map[enum.PostStatus]int)
+// 		stats := []*dbStatusCount{}
+// 		err := trx.Select(&stats, "SELECT status, COUNT(*) AS count FROM posts WHERE tenant_id = $1 GROUP BY status", tenant.ID)
+// 		if err != nil {
+// 			return errors.Wrap(err, "failed to count posts per status")
+// 		}
 
-		for _, v := range stats {
-			q.Result[v.Status] = v.Count
-		}
-		return nil
-	})
-}
+// 		for _, v := range stats {
+// 			q.Result[v.Status] = v.Count
+// 		}
+// 		return nil
+// 	})
+// }
 
 func addNewPost(ctx context.Context, c *cmd.AddNewPost) error {
 	return using(ctx, func(trx *dbx.Trx, tenant *entity.Tenant, user *entity.User) error {
@@ -362,15 +362,15 @@ func getPostByNumber(ctx context.Context, q *query.GetPostByNumber) error {
 
 func searchPosts(ctx context.Context, q *query.SearchPosts) error {
 	return using(ctx, func(trx *dbx.Trx, tenant *entity.Tenant, user *entity.User) error {
-		innerQuery := buildPostQuery(user, "p.tenant_id = $1 AND p.status = ANY($2)")
+		innerQuery := buildPostQuery(user, "p.tenant_id = $1")
 
 		if q.Tags == nil {
 			q.Tags = []string{}
 		}
 
-		if q.Statuses == nil {
-			q.Statuses = []enum.PostStatus{}
-		}
+		// if q.Statuses == nil {
+		// 	q.Statuses = []enum.PostStatus{}
+		// }
 
 		if q.Limit != "all" {
 			if _, err := strconv.Atoi(q.Limit); err != nil {
@@ -390,22 +390,16 @@ func searchPosts(ctx context.Context, q *query.SearchPosts) error {
 				ORDER BY %s DESC
 				LIMIT %s
 			`, innerQuery, scoreField, scoreField, q.Limit)
-			err = trx.Select(&posts, sql, tenant.ID, pq.Array([]enum.PostStatus{
-				enum.PostOpen,
-				enum.PostStarted,
-				enum.PostPlanned,
-				enum.PostCompleted,
-				enum.PostDeclined,
-			}), ToTSQuery(q.Query), SanitizeString(q.Query))
+			err = trx.Select(&posts, sql, tenant.ID, ToTSQuery(q.Query), SanitizeString(q.Query))
 		} else {
-			condition, statuses, sort := getViewData(*q)
+			condition, sort := getViewData(*q)
 			sql := fmt.Sprintf(`
 				SELECT * FROM (%s) AS q 
 				WHERE 1 = 1 %s
 				ORDER BY %s DESC
 				LIMIT %s
 			`, innerQuery, condition, sort, q.Limit)
-			params := []interface{}{tenant.ID, pq.Array(statuses)}
+			params := []interface{}{tenant.ID}
 			if len(q.Tags) > 0 {
 				params = append(params, pq.Array(q.Tags))
 			}

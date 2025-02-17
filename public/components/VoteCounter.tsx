@@ -1,7 +1,7 @@
 import "./VoteCounter.scss"
 
 import React, { useState } from "react"
-import { Post, PostStatus } from "@fider/models"
+import { Post } from "@fider/models"
 import { actions, classSet } from "@fider/services"
 import { Icon, SignInModal } from "@fider/components"
 import { useFider } from "@fider/hooks"
@@ -34,13 +34,13 @@ export const VoteCounter = (props: VoteCounterProps) => {
 
   const hideModal = () => setIsSignInModalOpen(false)
 
-  const status = PostStatus.Get(props.post.status)
-  const isDisabled = status.closed || fider.isReadOnly
+  // const status = PostStatus.Get(props.post.status)
+  const isDisabled = fider.isReadOnly
 
   const className = classSet({
     "border-gray-200 border rounded-md bg-gray-100": true,
     "c-vote-counter__button": true,
-    "c-vote-counter__button--voted": !status.closed && hasVoted,
+    "c-vote-counter__button--voted": hasVoted,
     "c-vote-counter__button--disabled": isDisabled,
   })
 

@@ -64,8 +64,8 @@ func (s Service) Init() {
 	bus.AddHandler(getPostByNumber)
 	bus.AddHandler(searchPosts)
 	bus.AddHandler(getAllPosts)
-	bus.AddHandler(countPostPerStatus)
-	bus.AddHandler(markPostAsDuplicate)
+	// bus.AddHandler(countPostPerStatus)
+	// bus.AddHandler(markPostAsDuplicate)
 	bus.AddHandler(setPostResponse)
 	bus.AddHandler(postIsReferenced)
 
