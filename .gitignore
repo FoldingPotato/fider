@@ -24,4 +24,4 @@ tsconfig.tsbuildinfo
 etc/*.pem
 
 pg_data/
-docker-compose.yml
+*.yml
