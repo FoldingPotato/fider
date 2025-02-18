@@ -87,13 +87,13 @@ func sendMail(ctx context.Context, c *cmd.SendMail) {
 
 		message := email.RenderMessage(ctx, c.TemplateName, c.From.Address, c.Props.Merge(to.Props))
 		b := builder{}
+		b.Set("MIME-version", "1.0")
+		b.Set("Content-Type", "text/html; charset=\"UTF-8\"")
+		b.Set("Date", time.Now().Format(time.RFC1123Z))
 		b.Set("From", c.From.String())
 		b.Set("Reply-To", c.From.Address)
 		b.Set("To", to.String())
 		b.Set("Subject", message.Subject)
-		b.Set("MIME-version", "1.0")
-		b.Set("Content-Type", "text/html; charset=\"UTF-8\"")
-		b.Set("Date", time.Now().Format(time.RFC1123Z))
 		// b.Set("Message-ID", generateMessageID(localname))
 		b.Body(message.Body)
 
