@@ -9,6 +9,7 @@ import "./MultiImageUploader.scss"
 interface MultiImageUploaderProps {
   field: string
   maxUploads: number
+  label: string
   bkeys?: string[]
   onChange?: (uploads: ImageUpload[]) => void
 }
@@ -56,9 +57,7 @@ export class MultiImageUploader extends React.Component<MultiImageUploaderProps,
         removed.push(upload)
       }
       delete instances[instanceID]
-      if (--count === this.props.maxUploads) {
-        this.addNewElement(instances)
-      }
+      this.addNewElement(instances)
     } else {
       instances[instanceID].upload = upload
       if (count++ <= this.props.maxUploads) {
@@ -81,7 +80,7 @@ export class MultiImageUploader extends React.Component<MultiImageUploaderProps,
   private addNewElement(instances: MultiImageUploaderInstances, bkey?: string) {
     const id = btoa(Math.random().toString())
     instances[id] = {
-      element: <ImageUploader key={id} bkey={bkey} instanceID={id} field="attachment" onChange={this.imageUploaded} />,
+      element: <ImageUploader label={this.props.label} key={id} bkey={bkey} instanceID={id} field="attachment" onChange={this.imageUploaded} />,
     }
   }
 
