@@ -79,7 +79,8 @@ export const PostInput = (props: PostInputProps) => {
         minRows={5}
         placeholder={i18n._("home.postinput.description.placeholder", { message: "Describe your suggestion (optional)" })}
       />
-      <MultiImageUploader field="attachments" maxUploads={3} onChange={setAttachments} />
+      <MultiImageUploader label="Please upload an image of the drink." field="attachments" maxUploads={1} onChange={setAttachments}/>
+      
       <Button type="submit" variant="primary" onClick={submit}>
         <Trans id="action.submit">Submit</Trans>
       </Button>
