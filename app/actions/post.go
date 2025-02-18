@@ -65,7 +65,7 @@ func (action *CreateNewPost) Validate(ctx context.Context, user *entity.User) *v
 
 	if action.Title == "" {
 		result.AddFieldFailure("title", propertyIsRequired(ctx, "title"))
-	} else if len(action.Title) < 10 {
+	} else if len(action.Title) < 5 {
 		result.AddFieldFailure("title", i18n.T(ctx, "validation.custom.descriptivetitle"))
 	} else if len(action.Title) > 100 {
 		result.AddFieldFailure("title", propertyMaxStringLen(ctx, "title", 100))
@@ -130,7 +130,7 @@ func (action *UpdatePost) Validate(ctx context.Context, user *entity.User) *vali
 
 	if action.Title == "" {
 		result.AddFieldFailure("title", propertyIsRequired(ctx, "title"))
-	} else if len(action.Title) < 10 {
+	} else if len(action.Title) < 5 {
 		result.AddFieldFailure("title", i18n.T(ctx, "validation.custom.descriptivetitle"))
 	} else if len(action.Title) > 100 {
 		result.AddFieldFailure("title", propertyMaxStringLen(ctx, "title", 100))
