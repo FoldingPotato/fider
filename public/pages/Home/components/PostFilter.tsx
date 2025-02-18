@@ -1,5 +1,5 @@
 import React from "react"
-import { PostStatus, Tag } from "@fider/models"
+import { Tag } from "@fider/models"
 import { Checkbox, Dropdown, Icon } from "@fider/components"
 import { HStack } from "@fider/components/layout"
 import HeroIconFilter from "@fider/assets/images/heroicons-filter.svg"
@@ -9,7 +9,7 @@ import { i18n } from "@lingui/core"
 
 import { FilterState } from "./PostsContainer"
 
-type FilterType = "tag" | "status" | "myVotes"
+type FilterType = "tag" | "myVotes"
 
 interface OptionItem {
   value: string | boolean
@@ -20,7 +20,6 @@ interface OptionItem {
 
 interface PostFilterProps {
   activeFilter: FilterState
-  countPerStatus: { [key: string]: number }
   filtersChanged: (filter: FilterState) => void
   tags: Tag[]
 }
@@ -32,9 +31,6 @@ export interface FilterItem {
 
 const FilterStateToFilterItems = (filterState: FilterState): FilterItem[] => {
   const filterItems: FilterItem[] = []
-  filterState.statuses.forEach((s) => {
-    filterItems.push({ type: "status", value: s })
-  })
   filterState.tags.forEach((t) => {
     filterItems.push({ type: "tag", value: t })
   })
@@ -45,12 +41,10 @@ const FilterStateToFilterItems = (filterState: FilterState): FilterItem[] => {
 }
 
 const FilterItemsToFilterState = (filterItems: FilterItem[]): FilterState => {
-  const filterState: FilterState = { tags: [], statuses: [], myVotes: false }
+  const filterState: FilterState = { tags: [], myVotes: false }
   filterItems.forEach((i) => {
     if (i.type === "tag") {
       filterState.tags.push(i.value as string)
-    } else if (i.type === "status") {
-      filterState.statuses.push(i.value as string)
     } else if (i.type === "myVotes") {
       filterState.myVotes = true
     }
@@ -76,16 +70,6 @@ export const PostFilter = (props: PostFilterProps) => {
   if (fider.session.isAuthenticated) {
     options.push({ value: true, label: i18n._("home.postfilter.option.myvotes", { message: "My Votes" }), type: "myVotes" })
   }
-
-  PostStatus.All.filter((s) => s.filterable && props.countPerStatus[s.value]).forEach((s) => {
-    const id = `enum.poststatus.${s.value.toString()}`
-    options.push({
-      label: i18n._(id, { message: s.title }),
-      value: s.value,
-      count: props.countPerStatus[s.value],
-      type: "status",
-    })
-  })
 
   props.tags.forEach((t) => {
     options.push({

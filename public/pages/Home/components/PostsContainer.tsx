@@ -31,7 +31,6 @@ interface PostsContainerState {
 
 export interface FilterState {
   tags: string[]
-  statuses: string[]
   myVotes: boolean
 }
 
@@ -46,7 +45,7 @@ export class PostsContainer extends React.Component<PostsContainerProps, PostsCo
       loading: false,
       view,
       query: querystring.get("query"),
-      filterState: { tags: querystring.getArray("tags"), statuses: querystring.getArray("statuses"), myVotes: querystring.get("myvotes") === "true" },
+      filterState: { tags: querystring.getArray("tags"), myVotes: querystring.get("myvotes") === "true" },
       limit: querystring.getNumber("limit"),
     }
   }
@@ -56,7 +55,6 @@ export class PostsContainer extends React.Component<PostsContainerProps, PostsCo
       const query = this.state.query.trim().toLowerCase()
       navigator.replaceState(
         querystring.stringify({
-          statuses: this.state.filterState.statuses,
           tags: this.state.filterState.tags,
           myvotes: this.state.filterState.myVotes ? "true" : undefined,
           query,
@@ -70,7 +68,6 @@ export class PostsContainer extends React.Component<PostsContainerProps, PostsCo
         this.state.view || "trending",
         this.state.limit,
         this.state.filterState.tags,
-        this.state.filterState.statuses,
         this.state.filterState.myVotes,
         reset
       )
@@ -78,11 +75,11 @@ export class PostsContainer extends React.Component<PostsContainerProps, PostsCo
   }
 
   private timer?: number
-  private async searchPosts(query: string, view: string, limit: number | undefined, tags: string[], statuses: string[], myVotes: boolean, reset: boolean) {
+  private async searchPosts(query: string, view: string, limit: number | undefined, tags: string[], myVotes: boolean, reset: boolean) {
     window.clearTimeout(this.timer)
     this.setState({ posts: reset ? undefined : this.state.posts, loading: true })
     this.timer = window.setTimeout(() => {
-      actions.searchPosts({ query, view: view, limit, tags, statuses, myVotes }).then((response) => {
+      actions.searchPosts({ query, view: view, limit, tags, myVotes }).then((response) => {
         if (response.ok && this.state.loading) {
           this.setState({ loading: false, posts: response.data })
         }
@@ -129,7 +126,6 @@ export class PostsContainer extends React.Component<PostsContainerProps, PostsCo
                 tags={this.props.tags}
                 activeFilter={this.state.filterState}
                 filtersChanged={this.handleFilterChanged}
-                countPerStatus={this.props.countPerStatus}
               />
               <PostsSort onChange={this.handleSortChanged} value={this.state.view} />
             </div>
